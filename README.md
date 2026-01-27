@@ -2,10 +2,74 @@ _This project has been created as part of the 42 curriculum by mduchauf._
 
 # <ins>Description</ins>
 
+The **Inception** project is a system administration exercise whose main goal is to introduce the fundamentals of containerization using **Docker**.
+The objective is to design, build, and deploy a small infrastructure composed of multiple services, each running in its own Docker container, and orchestrated using **Docker Compose**.
+
+This project is carried out inside a **personal virtual machine** and focuses on understanding how modern applications are deployed in isolated, reproducible, and scalable environments.
+Rather than using pre-built images, all services are built from **custom Dockerfiles**, ensuring full control over configuration, security, and behavior.
+
+The infrastructure includes:
+
+- An **NGINX** web server configured with **TLS (HTTPS only)**.
+- A **WordPress** application running with **PHP-FPM**.
+- A **MariaDB** database server.
+- Persistent storage using **Docker named volumes**.
+- A dedicated **Docker network** to isolate internal communications.
+
+Special attention is given to security best practices, such as:
+
+- Using environment variables and secrets instead of hard-coded credentials.
+- Exposing only the required ports.
+- Ensuring containers restart automatically in case of failure.
+
+This project aims to provide a solid understanding of Docker concepts while highlighting the differences between traditional virtual machines and container-based architectures.
+
 <br>
 <br>
 
 # <ins>Instructions</ins>
+
+## Prerequisites
+
+Make sure your system meets the following requirements before starting the project:
+
+- **Operating System:** Linux-based VM
+- **Docker:** Installed and working
+- **Docker Compose:** Installed and working
+
+---
+
+## Build and Start the Project
+
+To build all Docker images and start the containers:
+
+```bash
+make
+```
+
+This command will:
+
+- Build the Docker images from your custom Dockerfiles.
+- Start all services as defined in docker-compose.yml.
+- Create the necessary Docker network and volumes.
+
+<br>To stop all running containers without removing images or volumes:
+
+```bash
+make down
+```
+
+<br>To completely remove all containers, images, volumes and networks created:
+
+```bash
+make fclean
+```
+
+<br>Once the project is running, open your browser and go to:
+
+[https://mduchauf.42.fr](https://mduchauf.42.fr)
+
+This will give you access to the WordPress website hosted on your NGINX container.
 
 <br>
 <br>
@@ -101,3 +165,7 @@ In our case we will use Docker Volumes cause we don't need to access the files f
 => [https://docs.docker.com/engine/storage/volumes/](https://docs.docker.com/engine/storage/volumes/)
 
 ---
+
+```
+
+```
