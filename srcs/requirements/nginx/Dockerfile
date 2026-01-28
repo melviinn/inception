@@ -1,27 +1,24 @@
 # Penultimate version of Alpine
 FROM alpine:3.22
 
-# Installer NGINX
+# Install NGINX & OpenSSL
 RUN apk add --no-cache nginx openssl
 
-# Creer le fichier de confif
+# Create the config file for SSL certification
 RUN mkdir /etc/nginx/ssl
 RUN openssl req -x509 -nodes -days 365 -newkey rsa:4096 \
 	-keyout /etc/nginx/ssl/nginx.key \
 	-out /etc/nginx/ssl/nginx.crt \
 	-subj "/C=FR/ST=France/L=Paris/O=42\ School/OU=mduchauf/CN=mduchauf/"
 
-# COPY ./conf/nginx.conf /etc/nginx/conf.d/nginx.conf
 COPY ./conf/nginx.conf /etc/nginx/nginx.conf
-# COPY ./conf/default.conf /etc/nginx/conf.d/default.conf
 
-
-# Copier les fichiers de l'application
+# Copy the files of the application
 WORKDIR /app
 COPY . /app
 
-# Exposer le port 443
+# Expose port 443
 EXPOSE 443
 
-# Lancer NGINX au premier plan
+# Launch nginx in foreground
 CMD ["nginx", "-g", "daemon off;"]
