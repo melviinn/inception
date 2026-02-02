@@ -1,6 +1,8 @@
 #!/bin/bash
 set -euo pipefail
 
+# DB_PASSWORD == cat /run/secrets/db_password
+
 # Check si les variables d'environnement sont définies
 : "${MYSQL_DATABASE:?missing MYSQL_DATABASE}"
 : "${MYSQL_USER:?missing MYSQL_USER}"
