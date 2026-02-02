@@ -2,6 +2,7 @@
 
 WORKDIR		:= $(shell pwd)
 DOCKER_IMGS	:= $(shell docker images -q)
+DOCKER_CTRS	:= $(shell docker ps -aq)
 
 # Colors
 RED			:=	$(shell tput -Txterm setaf 1)
@@ -15,17 +16,24 @@ build:
 down:
 	@cd $(WORKDIR)/srcs && docker compose down
 
+clean-containers:
+	@if [ -z "$(DOCKER_CTRS)" ]; then \
+		echo "\n$(RED)No containers to remove$(RESET_COLOR)"; \
+	else \
+		docker rm -f $(DOCKER_CTRS); \
+	fi
+
 clean-imgs:
 	@if [ -z "$(DOCKER_IMGS)" ]; then \
 		echo "\n$(RED)No images to remove$(RESET_COLOR)"; \
 	else \
-		docker rmi $(DOCKER_IMGS); \
+		docker rmi --force $(DOCKER_IMGS); \
 	fi
 
-fclean: down clean-imgs
-	@echo "\n$(RED)All Docker images removed and containers stopped!$(RESET_COLOR)"
+fclean: down clean-containers clean-imgs
+	@echo "\n$(RED)All Docker containers removed and images deleted!$(RESET_COLOR)"
+
 
 re: fclean build
 
-.PHONY:
-	build down clean-imgs fclean re
+.PHONY: build down clean-containers clean-imgs fclean re

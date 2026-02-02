@@ -8,6 +8,6 @@ RUN mkdir -p /run/mysqld && chown -R mysql:mysql /run/mysqld
 
 EXPOSE 3306
 
-# COPY ./tools/script.sh /
-# RUN chmod +x /script.sh
-# CMD [ "/script.sh" ]
+COPY ./tools/script.sh /
+RUN chmod +x /script.sh
+CMD [ "/script.sh" ]

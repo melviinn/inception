@@ -1,8 +1,8 @@
 # Penultimate version of Alpine
-FROM alpine:3.22
+FROM debian:bookworm
 
 # Install NGINX & OpenSSL
-RUN apk add --no-cache nginx openssl
+RUN apt update -y && apt-get install -y nginx openssl
 
 # Create the config file for SSL certification
 RUN mkdir /etc/nginx/ssl

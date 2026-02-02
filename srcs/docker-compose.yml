@@ -10,6 +10,25 @@ services:
     networks:
       - inception
     restart: always
+  mariadb:
+    build: ./requirements/mariadb
+    image: mariadb
+    container_name: mariadb
+    env_file:
+      - .env
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    expose:
+      - "3306"
+    networks:
+      - inception
+    restart: always
+
+volumes:
+  mariadb_data:
+    name: mariadb_data
+  # wordpress_data:
+  #   name: wordpress_data
 
 networks:
   inception:
