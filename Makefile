@@ -3,6 +3,7 @@
 WORKDIR		:= $(shell pwd)
 DOCKER_IMGS	:= $(shell docker images -q)
 DOCKER_CTRS	:= $(shell docker ps -aq)
+DOCKER_VLMS	:= $(shell docker volume ls -q)
 
 # Colors
 RED			:=	$(shell tput -Txterm setaf 1)
