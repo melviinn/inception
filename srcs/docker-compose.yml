@@ -4,8 +4,8 @@ services:
     container_name: nginx
     ports:
       - "443:443"
-    # depends_on:
-    #   - wordpress
+    depends_on:
+      - wordpress
     image: nginx
     networks:
       - inception
