@@ -45,20 +45,20 @@ fi
 
 if [ "$is_db_created" -eq 1 ]; then
   log_info "Starting MariaDB temporarily for init SQL..."
-  mariadbd --user=mysql --datadir="$DATADIR" --skip-networking --socket="$SOCKET" &
+  mariadbd --skip-networking &
   pid="$!"
 
   for i in {1..60}; do
-    if mysqladmin --socket="$SOCKET" ping --silent >/dev/null 2>&1; then
+    if mysqladmin ping --silent >/dev/null 2>&1; then
       break
     fi
     sleep 1
   done
-  mysqladmin --socket="$SOCKET" ping --silent >/dev/null 2>&1 \
+  mysqladmin ping --silent >/dev/null 2>&1 \
     || { log_error "MariaDB not ready after timeout"; exit 1; }
 
   log_ok "Creating database/user..."
-  mysql --protocol=socket --socket="$SOCKET" -u root <<SQL
+  mysql -u root <<SQL
 CREATE DATABASE IF NOT EXISTS \`${MYSQL_DATABASE}\`;
 CREATE USER IF NOT EXISTS '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}';
 GRANT ALL PRIVILEGES ON \`${MYSQL_DATABASE}\`.* TO '${MYSQL_USER}'@'%';
@@ -67,8 +67,8 @@ FLUSH PRIVILEGES;
 SQL
 
   # Temporarily shutdown the database to apply changes
-  mysqladmin --protocol=socket --socket="$SOCKET" -u root -p"${MYSQL_ROOT_PASSWORD}" shutdown >/dev/null 2>&1 \
-    || mysqladmin --protocol=socket --socket="$SOCKET" -u root shutdown >/dev/null 2>&1 \
+  mysqladmin -u root -p"${MYSQL_ROOT_PASSWORD}" shutdown >/dev/null 2>&1 \
+    || mysqladmin -u root shutdown >/dev/null 2>&1 \
     || true
 
   wait "$pid" || true
@@ -76,5 +76,5 @@ else
   log_warn "Database '$MYSQL_DATABASE' already present. Skipping creation..."
 fi
 
-exec mariadbd --user=mysql --datadir="$DATADIR" --socket="$SOCKET"
+exec mariadbd
 # exec mysqld_safe
