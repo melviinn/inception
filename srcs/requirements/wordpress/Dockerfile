@@ -1,5 +1,4 @@
-# Penultimate version of Alpine
-FROM alpine:3.22
+FROM debian:bookworm
 
-# Install the required dependencies
-RUN apk add php-fpm
+# Install the required dependencies (Wordpress + php-fpm)
+RUN apt update -y

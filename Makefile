@@ -11,7 +11,7 @@ GREEN		:=	$(shell tput -Txterm setaf 2)
 RESET_COLOR	:=	$(shell tput -Txterm sgr0)
 
 build:
-	@cd $(WORKDIR)/srcs && docker compose up --build -d
+	@cd $(WORKDIR)/srcs && docker compose up --build -d --wait
 	@echo "\n$(GREEN)Successfully built and started all Docker images and containers! ✅$(RESET_COLOR)"
 
 down:
@@ -40,10 +40,10 @@ clean-volumes:
 		docker volume rm $(DOCKER_VLMS); \
 	fi
 
-fclean: down clean-containers clean-imgs clean-volumes
+fclean: down clean-imgs
 	@echo "\n$(RED)All Docker containers, images and volumes has been removed!$(RESET_COLOR)"
 
 
 re: fclean build
 
-.PHONY: build down clean-containers clean-imgs fclean re
+.PHONY: build down clean-containers clean-imgs clean-volumes fclean re

@@ -1,3 +1,4 @@
 # Retirer le commentaire avant de push final
 # *.env
-
+# ./secrets/*
+# .vscode/

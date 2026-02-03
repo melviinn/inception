@@ -26,12 +26,25 @@ services:
       - db_root_password
       - db_password
     restart: always
+  wordpress:
+    build: ./requirements/wordpress
+    image: wordpress
+    container_name: wordpress
+    volumes:
+      - wordpress_data:/var/www/html
+    expose:
+      - 9000
+    networks:
+      - inception
+    depends_on:
+      - mariadb
+    restart: always
 
 volumes:
   mariadb_data:
     name: mariadb_data
-  # wordpress_data:
-  #   name: wordpress_data
+  wordpress_data:
+    name: wordpress_data
 
 secrets:
   db_root_password:
