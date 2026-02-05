@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -e    # Exit immediately if a command exits with a non-zero status
 
 # --- Colors / logging ---
 NC='\033[0m'
@@ -29,11 +29,13 @@ if [ -z "${MYSQL_ROOT_PASSWORD:-}" ] && [ -n "${MYSQL_ROOT_PASSWORD_FILE:-}" ]; 
   export MYSQL_ROOT_PASSWORD
 fi
 
+# --- Check if the environments var are specified (return if one is missing) ---
 : "${MYSQL_DATABASE:?missing MYSQL_DATABASE environment variable}"
 : "${MYSQL_USER:?missing MYSQL_USER environment variable}"
 : "${MYSQL_PASSWORD:?missing MYSQL_PASSWORD environment variable}"
 : "${MYSQL_ROOT_PASSWORD:?missing MYSQL_ROOT_PASSWORD environment variable}"
 
+# --- Create (if not exist) data directory and socket directory and gave correct permissions ---
 mkdir -p /run/mysqld "$DATADIR"
 chown -R mysql:mysql /run/mysqld "$DATADIR"
 
@@ -48,15 +50,18 @@ if [ "$is_db_created" -eq 1 ]; then
   mariadbd --skip-networking &
   pid="$!"
 
+  # Wait for the database to be ready (timeout: 60s)
   for i in {1..60}; do
     if mysqladmin ping --silent >/dev/null 2>&1; then
       break
     fi
     sleep 1
   done
+  # Check if the database is ready after timeout
   mysqladmin ping --silent >/dev/null 2>&1 \
     || { log_error "MariaDB not ready after timeout"; exit 1; }
 
+  # Create database and user, and set root password
   log_ok "Creating database/user..."
   mysql -u root <<SQL
 CREATE DATABASE IF NOT EXISTS \`${MYSQL_DATABASE}\`;
@@ -76,5 +81,5 @@ else
   log_warn "Database '$MYSQL_DATABASE' already present. Skipping creation..."
 fi
 
+# --- Start MariaDB in foreground ---
 exec mariadbd
-# exec mysqld_safe

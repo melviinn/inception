@@ -1,4 +1,3 @@
-# Penultimate version of Alpine
 FROM debian:bookworm
 
 # Install NGINX & OpenSSL

@@ -9,6 +9,8 @@ services:
     image: nginx
     networks:
       - inception
+    volumes:
+      - wordpress:/var/www/html
     restart: always
   mariadb:
     build: ./requirements/mariadb
@@ -17,9 +19,9 @@ services:
     env_file:
       - .env
     volumes:
-      - mariadb_data:/var/lib/mysql
-    # expose:
-    #   - "3306"
+      - mariadb:/var/lib/mysql
+    ports:
+      - 3306:3306
     networks:
       - inception
     secrets:
@@ -31,19 +33,24 @@ services:
     image: wordpress
     container_name: wordpress
     volumes:
-      - wordpress_data:/var/www/html
-    expose:
-      - 9000
+      - wordpress:/var/www/html
+    ports:
+      - 9000:9000
     networks:
       - inception
     depends_on:
       - mariadb
+    env_file:
+      - .env
+    secrets:
+      - db_root_password
+      - wp_credentials
     restart: always
 
 volumes:
-  mariadb_data:
+  mariadb:
     name: mariadb_data
-  wordpress_data:
+  wordpress:
     name: wordpress_data
 
 secrets:
@@ -51,6 +58,8 @@ secrets:
     file: ../secrets/db_root_password.txt
   db_password:
     file: ../secrets/db_password.txt
+  wp_credentials:
+    file: ../secrets/wp_credentials.txt
 
 networks:
   inception:
