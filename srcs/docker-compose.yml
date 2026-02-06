@@ -50,8 +50,11 @@ services:
 volumes:
   mariadb:
     name: mariadb_data
+    driver: local
+
   wordpress:
     name: wordpress_data
+    driver: local
 
 secrets:
   db_root_password:

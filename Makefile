@@ -8,6 +8,7 @@ DOCKER_VLMS	:= $(shell docker volume ls -q)
 # Colors
 RED			:=	$(shell tput -Txterm setaf 1)
 GREEN		:=	$(shell tput -Txterm setaf 2)
+BLUE		:=	$(shell tput -Txterm setaf 4)
 RESET_COLOR	:=	$(shell tput -Txterm sgr0)
 
 build:
@@ -24,12 +25,12 @@ down:
 		cd $(WORKDIR)/srcs && docker compose down; \
 	fi
 
-docker-infos:
-	@echo "$(GREEN)Docker Images:$(RESET_COLOR)"
+infos:
+	@echo "$(BLUE)Docker Images:$(RESET_COLOR)"
 	@docker images
-	@echo "\n$(GREEN)Docker Containers:$(RESET_COLOR)"
+	@echo "\n$(BLUE)Docker Containers:$(RESET_COLOR)"
 	@docker ps -a
-	@echo "\n$(GREEN)Docker Volumes:$(RESET_COLOR)"
+	@echo "\n$(BLUE)Docker Volumes:$(RESET_COLOR)"
 	@docker volume ls
 
 clean-containers:

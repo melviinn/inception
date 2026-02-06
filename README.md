@@ -2,16 +2,16 @@ _This project has been created as part of the 42 curriculum by mduchauf._
 
 # <ins>Description</ins>
 
-The **Inception** project is a system administration exercise whose main goal is to introduce the fundamentals of containerization using **Docker**.
-The objective is to design, build, and deploy a small infrastructure composed of multiple services, each running in its own Docker container, and orchestrated using **Docker Compose**.
+The **Inception** project is a **system administration** exercise whose main goal is to introduce the fundamentals of **containerization** using **Docker**.
+The objective is to design, build, and deploy a small infrastructure composed of multiple services, each running in its own **Docker container**, and orchestrated using **Docker Compose**.
 
 This project is carried out inside a **personal virtual machine** and focuses on understanding how modern applications are deployed in isolated, reproducible, and scalable environments.
 Rather than using pre-built images, all services are built from **custom Dockerfiles**, ensuring full control over configuration, security, and behavior.
 
 The infrastructure includes:
 
-- An **NGINX** web server configured with **TLS (HTTPS only)**.
-- A **WordPress** application running with **PHP-FPM**.
+- An **NGINX** web server configured with **TLS1.3 (HTTPS only)**.
+- A **WordPress** application running with **php-fpm**.
 - A **MariaDB** database server.
 - Persistent storage using **Docker named volumes**.
 - A dedicated **Docker network** to isolate internal communications.
@@ -22,7 +22,7 @@ Special attention is given to security best practices, such as:
 - Exposing only the required ports.
 - Ensuring containers restart automatically in case of failure.
 
-This project aims to provide a solid understanding of Docker concepts while highlighting the differences between traditional virtual machines and container-based architectures.
+This project aims to provide a solid understanding of Docker concepts while highlighting the differences <ins>**between traditional virtual machines and container-based architectures**</ins>.
 
 <br>
 <br>
@@ -36,7 +36,63 @@ Make sure your system meets the following requirements before starting the proje
 - **Operating System:** Linux-based VM
 - **Docker:** Installed and working
 - **Docker Compose:** Installed and working
+- **Make:** Installed for using the provided Makefile
+- **Sudo privileges:** Required for managing Docker containers and networks
 
+---
+
+## Before running `make` (required)
+
+### 1) Configure your domain name (hosts file)
+
+To access your website via `https://<login>.42.fr`, you must map the domain to your local machine.
+
+Edit `/etc/hosts` and add the following line (replace `<login>` with your 42 login):
+
+```bash
+127.0.0.1 <login>.42.fr
+```
+
+Example (for `mduchauf`):
+
+```bash
+127.0.0.1 mduchauf.42.fr
+```
+
+You can edit the file with:
+
+```bash
+sudo nano /etc/hosts
+```
+
+Or append the line directly:
+
+```bash
+echo "127.0.0.1 <login>.42.fr" | sudo tee -a /etc/hosts
+```
+
+### 2) Create the data directory for the named volumes and set the correct permissions
+
+```bash
+sudo mkdir -p /home/<login>/data/mariadb /home/<login>/data/wordpress
+sudo chown -R <login>:<login> /home/<login>/data
+```
+
+Replace `<login>` with your 42 login.
+
+### 3) Give acces to make and docker commands without sudo
+
+```bash
+sudo usermod -aG docker $USER
+newgrp docker
+```
+
+Alternatively, you can run the make commands in su mode:
+
+```bash
+su
+...make
+```
 ---
 
 ## Build and Start the Project
@@ -67,7 +123,7 @@ make fclean
 
 <br>Once the project is running, open your browser and go to:
 
-[https://mduchauf.42.fr](https://mduchauf.42.fr)
+[https://mduchauf.42.fr](https://mduchauf.42.fr) (replace `mduchauf` with your 42 login)
 
 This will give you access to the WordPress website hosted on your NGINX container.
 
@@ -89,14 +145,12 @@ This will give you access to the WordPress website hosted on your NGINX containe
 ## AI Utilisation
 
 - I used AI to install the required docker packages (docker.io & docker-compose)
+- It also helped me to redact the README.md file and find the best explanations for the different subjects (VM vs Docker, Secrets vs Env vars, etc.)
 
 <br>
 <br>
 
 # <ins>Project description</ins>
-
-_explain the use of Docker and the sources
-included in the project. It must indicate the main design choices_
 
 ### Virtual Machines VS Docker:
 
@@ -120,7 +174,7 @@ Using Docker is lighter than having to embed a complete operating system. Here, 
 ### Secrets VS Environments Variables
 
 The main difference between Docker secrets and environment variables is that a Docker secret can only be accessed by a service when explicitly granted a secrets attribute within the services top-level element. The secrets are then mounted as a file under /run/secrets/<secret_name> inside the container.
-Environments variables are often available to ass processes and it can be difficult to track access. They can also be printed in logs when debugging without your knowledge.
+Environments variables are often available to as processes and it can be difficult to track access. They can also be printed in logs when debugging without your knowledge.
 
 => [https://docs.docker.com/compose/how-tos/use-secrets/](https://docs.docker.com/compose/how-tos/use-secrets/)
 
