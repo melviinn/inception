@@ -84,7 +84,7 @@ if ! wp --allow-root --path="${WP_PATH}" --url="https://${DOMAIN_NAME}" core is-
     --skip-email \
     --skip-plugins --skip-themes
 
-  # --- Create a second (non-admin) WordPress user (required by subject) ---
+  # --- Create a second (non-admin) WordPress user ---
   if ! wp --allow-root --path="${WP_PATH}" user get "${WP_USER}" >/dev/null 2>&1; then
     wp --allow-root --path="${WP_PATH}" user create "${WP_USER}" "${WP_USER_EMAIL}" \
       --user_pass="${WP_USER_PASSWORD}" \
