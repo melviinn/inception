@@ -11,7 +11,7 @@ services:
       - inception
     depends_on:
       - wordpress
-    restart: always
+    restart: on-failure
   mariadb:
     build: ./requirements/mariadb
     image: mariadb
@@ -27,7 +27,7 @@ services:
     secrets:
       - db_root_password
       - db_password
-    restart: always
+    restart: on-failure
   wordpress:
     build: ./requirements/wordpress
     image: wordpress
@@ -45,7 +45,7 @@ services:
     secrets:
       - db_root_password
       - wp_credentials
-    restart: always
+    restart: on-failure
 
 volumes:
   mariadb:
