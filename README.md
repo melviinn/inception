@@ -81,6 +81,7 @@ sudo chown -R $USER:$USER /home/<login>/data/docker
 Replace `<login>` with your 42 login.
 
 ### 3) Configure Docker to use the correct data directory for volumes
+
 To ensure that Docker uses the correct data directory for volumes, you need to configure the Docker daemon to use a specific directory on your local machine. This is done by creating or modifying the `/etc/docker/daemon.json` file.
 
 ```bash
@@ -93,6 +94,12 @@ Add the following content to specify the data directory (replace `<login>` with 
 {
   "data-root": "/home/<login>/data/docker"
 }
+```
+
+You then need to restart the Docker daemon for the changes to take effect:
+
+```bash
+sudo systemctl restart docker
 ```
 
 ### 4) Give acces to make and docker commands without sudo (optional but recommended)
@@ -108,6 +115,7 @@ Alternatively, you can run the make commands in su mode:
 su
 ...make
 ```
+
 ---
 
 ## Build and Start the Project
@@ -156,6 +164,18 @@ This will give you access to the WordPress website hosted on your NGINX containe
 - [List of Docker commands & instructions](https://gist.github.com/jpchateau/4efb6ed0587c1c0e37c3)
 
 - [Youtube Docker tutorial](https://www.youtube.com/watch?v=pTFZFxd4hOI)
+
+- [Docker secrets](https://docs.docker.com/engine/swarm/secrets/)
+
+- [Docker volumes](https://docs.docker.com/storage/volumes/)
+
+- [Mariadb installation](https://oleks.ca/2024/09/08/installation-de-mariadb-sur-debian/)
+
+- [Wordpress installation](https://make.wordpress.org/cli/handbook/guides/installing/)
+
+- [Wordpress utils wp config](https://developer.wordpress.org/cli/commands/config)
+
+- [Wordpress utils wp core](https://developer.wordpress.org/cli/commands/core)
 
 ## AI Utilisation
 
