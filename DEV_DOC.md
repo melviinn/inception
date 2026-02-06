@@ -174,7 +174,7 @@ This configuration ensures that all Docker data, including volumes, is stored in
 make
 ```
 
-#### Stop and remove all container, networks... `docker-compose up`
+#### Stop and remove all containers created by `docker-compose up` without removing volumes or images
 
 ```bash
 make down 						# ==> this will launch docker compose down

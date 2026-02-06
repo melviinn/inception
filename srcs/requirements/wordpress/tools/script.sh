@@ -42,6 +42,22 @@ else
   : "${WP_ADMIN_PASSWORD:?Missing WP_ADMIN_PASSWORD or WP_CREDENTIALS_FILE}"
 fi
 
+# --- Get WP secondary user credentials from secret file ---
+if [ -z "${WP_USER:-}" ] && [ -f "${WP_CREDENTIALS_FILE}" ]; then
+  WP_USER="$(grep -m1 '^WP_USER=' "${WP_CREDENTIALS_FILE}" | cut -d= -f2- | tr -d '\r\n')"
+fi
+: "${WP_USER:?Missing WP_USER}"
+
+if [ -z "${WP_USER_EMAIL:-}" ] && [ -f "${WP_CREDENTIALS_FILE}" ]; then
+  WP_USER_EMAIL="$(grep -m1 '^WP_USER_EMAIL=' "${WP_CREDENTIALS_FILE}" | cut -d= -f2- | tr -d '\r\n')"
+fi
+: "${WP_USER_EMAIL:?Missing WP_USER_EMAIL}"
+
+if [ -z "${WP_USER_PASSWORD:-}" ] && [ -f "${WP_CREDENTIALS_FILE}" ]; then
+  WP_USER_PASSWORD="$(grep -m1 '^WP_USER_PASSWORD=' "${WP_CREDENTIALS_FILE}" | cut -d= -f2- | tr -d '\r\n')"
+fi
+: "${WP_USER_PASSWORD:?Missing WP_USER_PASSWORD}"
+
 # --- Create wp-config.php if it doesn't exist ---
 if [ ! -f "${WP_PATH}/wp-config.php" ]; then
   wp --allow-root --path="${WP_PATH}" config create \
@@ -67,6 +83,13 @@ if ! wp --allow-root --path="${WP_PATH}" --url="https://${DOMAIN_NAME}" core is-
     --admin_email="${WP_ADMIN_EMAIL}" \
     --skip-email \
     --skip-plugins --skip-themes
+
+  # --- Create a second (non-admin) WordPress user (required by subject) ---
+  if ! wp --allow-root --path="${WP_PATH}" user get "${WP_USER}" >/dev/null 2>&1; then
+    wp --allow-root --path="${WP_PATH}" user create "${WP_USER}" "${WP_USER_EMAIL}" \
+      --user_pass="${WP_USER_PASSWORD}" \
+      --role=author
+  fi
 fi
 
 exec php-fpm8.2 -F
