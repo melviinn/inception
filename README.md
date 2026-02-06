@@ -71,16 +71,31 @@ Or append the line directly:
 echo "127.0.0.1 <login>.42.fr" | sudo tee -a /etc/hosts
 ```
 
-### 2) Create the data directory for the named volumes and set the correct permissions
+### 2) Create the data directory for the `named volumes` and set the correct permissions
 
 ```bash
-sudo mkdir -p /home/<login>/data/mariadb /home/<login>/data/wordpress
-sudo chown -R <login>:<login> /home/<login>/data
+sudo mkdir -p /home/<login>/data/docker
+sudo chown -R $USER:$USER /home/<login>/data/docker
 ```
 
 Replace `<login>` with your 42 login.
 
-### 3) Give acces to make and docker commands without sudo
+### 3) Configure Docker to use the correct data directory for volumes
+To ensure that Docker uses the correct data directory for volumes, you need to configure the Docker daemon to use a specific directory on your local machine. This is done by creating or modifying the `/etc/docker/daemon.json` file.
+
+```bash
+sudo nano /etc/docker/daemon.json
+```
+
+Add the following content to specify the data directory (replace `<login>` with your 42 login):
+
+```json
+{
+  "data-root": "/home/<login>/data/docker"
+}
+```
+
+### 4) Give acces to make and docker commands without sudo (optional but recommended)
 
 ```bash
 sudo usermod -aG docker $USER

@@ -64,15 +64,6 @@ Or append the line directly:
 echo "127.0.0.1 <login>.42.fr" | sudo tee -a /etc/hosts
 ```
 
-5. Create the data directory for the named volumes and set the correct permissions
-
-```bash
-sudo mkdir -p /home/<login>/data/mariadb /home/<login>/data/wordpress
-sudo chown -R <login>:<login> /home/<login>/data
-```
-
-Replace `<login>` with your 42 login.
-
 <br>
 <br>
 
@@ -89,9 +80,7 @@ cd inception
 
 ```bash
 mkdir -p secrets/
-touch secrets/db_password
-touch secrets/db_root_password
-touch secrets/wp_credentials
+touch secrets/db_password secrets/db_root_password secrets/wp_credentials
 touch srcs/.env
 ```
 
@@ -131,6 +120,45 @@ my_secure_db_password
 
 <br>
 <br>
+
+### Data persistence for volumes
+
+The project uses Docker named volumes to persist data for the MariaDB database and WordPress. The volumes are defined in the `docker-compose.yml` file as follows:
+
+```yaml
+volumes:
+  mariadb:
+	name: mariadb_data
+	driver: local
+  wordpress:
+	name: wordpress_data
+	driver: local
+```
+
+To specifically store the data on your local machine `(/home/login/data)`, you have to configure the file `/etc/docker/daemon.json` and create the data directory with the correct permissions.
+
+Create the data directory for the `named volumes` and set the correct permissions:
+```bash
+sudo mkdir -p /home/<login>/data/docker
+sudo chown -R $USER:$USER /home/<login>/data/docker
+```
+
+Replace `<login>` with your 42 login.
+
+Configure Docker to use the correct data directory for volumes:
+```bash
+sudo nano /etc/docker/daemon.json
+```
+
+And add the following content (replace `<login>` with your 42 login):
+
+```json
+{
+  "data-root": "/home/<login>/data"
+}
+```
+
+This configuration ensures that all Docker data, including volumes, is stored in the specified directory on your local machine. The MariaDB and WordPress data will be persisted in the `mariadb_data` and `wordpress_data` volumes, respectively, which are located within the `/home/<login>/data` directory. (This ensure the data are in the right directory and that we don't use bind mounts, which are not allowed in this project)
 
 ## Makefile commands
 
