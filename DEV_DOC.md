@@ -79,7 +79,6 @@ cd inception
 3. Create and configure any necessary configuration files and secrets as per the project requirements. This may include setting up environment variables, database credentials, etc.
 
 ```bash
-mkdir -p secrets/
 touch secrets/db_password secrets/db_root_password secrets/wp_credentials
 touch srcs/.env
 ```
