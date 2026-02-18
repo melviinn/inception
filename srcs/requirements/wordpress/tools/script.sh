@@ -12,14 +12,14 @@ DB_PORT='3306'
 : "${WP_CREDENTIALS_FILE:?Missing WP_CREDENTIALS_FILE}"
 
 # --- Get MYSQL_PASSWORD from secret file ---
-if [ "${MYSQL_ROOT_PASSWORD_FILE:-}" ] && [ -f "${MYSQL_ROOT_PASSWORD_FILE}" ]; then
-  MYSQL_ROOT_PASSWORD="$(cat "${MYSQL_ROOT_PASSWORD_FILE}")"
+if [ "${MYSQL_PASSWORD_FILE:-}" ] && [ -f "${MYSQL_PASSWORD_FILE}" ]; then
+  MYSQL_PASSWORD="$(tr -d '\r\n' < "${MYSQL_PASSWORD_FILE}")"
 else
-  : "${MYSQL_ROOT_PASSWORD:?Missing MYSQL_ROOT_PASSWORD or MYSQL_ROOT_PASSWORD_FILE}"
+  : "${MYSQL_PASSWORD:?Missing MYSQL_PASSWORD or MYSQL_PASSWORD_FILE}"
 fi
 
 # --- Wait until MariaDB is ready ---
-until mariadb-admin ping -h"${DB_HOST}" -P"${DB_PORT}" -u"${MYSQL_USER}" -p"${MYSQL_ROOT_PASSWORD}" --silent; do
+until mariadb-admin ping -h"${DB_HOST}" -P"${DB_PORT}" -u"${MYSQL_USER}" -p"${MYSQL_PASSWORD}" --silent; do
   sleep 1
 done
 
@@ -63,7 +63,7 @@ if [ ! -f "${WP_PATH}/wp-config.php" ]; then
   wp --allow-root --path="${WP_PATH}" config create \
     --dbname="${MYSQL_DATABASE}" \
     --dbuser="${MYSQL_USER}" \
-    --dbpass="${MYSQL_ROOT_PASSWORD}" \
+    --dbpass="${MYSQL_PASSWORD}" \
     --dbhost="${DB_HOST}:${DB_PORT}"
 fi
 

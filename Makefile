@@ -1,5 +1,3 @@
-#Makefile that build all the Dockerfiles in the current directory
-
 WORKDIR		:= $(shell pwd)
 DOCKER_IMGS	:= $(shell docker images -q)
 DOCKER_CTRS	:= $(shell docker ps -aq)
@@ -32,6 +30,12 @@ infos:
 	@docker ps -a
 	@echo "\n$(BLUE)Docker Volumes:$(RESET_COLOR)"
 	@docker volume ls
+	@echo "\n$(BLUE)Docker System Disk Usage:$(RESET_COLOR)"
+	@docker system df
+
+logs:
+	@echo "\n$(BLUE)Showing logs for all containers...$(RESET_COLOR)"
+	@cd $(WORKDIR)/srcs && docker compose logs
 
 clean-containers:
 	@if [ -z "$(DOCKER_CTRS)" ]; then \

@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e    # Exit immediately if a command exits with a non-zero status
+set -e
 
 # --- Colors / logging ---
 NC='\033[0m'
@@ -13,7 +13,6 @@ log_ok()    { printf "%b\n" "${GREEN}[OK]${NC} $*"; }
 log_warn()  { printf "%b\n" "${YELLOW}[WARN]${NC} $*"; }
 log_error() { printf "%b\n" "${RED}[ERROR]${NC} $*" >&2; }
 
-SOCKET="/run/mysqld/mysqld.sock"
 DATADIR="/var/lib/mysql"
 
 # --- Read secrets from file (/run/secrets/...) ---
@@ -39,29 +38,31 @@ fi
 mkdir -p /run/mysqld "$DATADIR"
 chown -R mysql:mysql /run/mysqld "$DATADIR"
 
-# --- Init SQL (DB/user) if the database does not already exist ---
+# --- Check if the database already exists ---
 is_db_created=0
 if [ ! -d "$DATADIR/$MYSQL_DATABASE" ]; then
   is_db_created=1
 fi
 
+# --- Init SQL (DB/user) if the database does not already exist ---
 if [ "$is_db_created" -eq 1 ]; then
   log_info "Starting MariaDB temporarily for init SQL..."
   mariadbd --skip-networking &
   pid="$!"
 
-  # Wait for the database to be ready (timeout: 60s)
+  # --- Wait for the database to be ready (timeout: 60s) ---
   for i in {1..60}; do
     if mysqladmin ping --silent >/dev/null 2>&1; then
       break
     fi
     sleep 1
   done
-  # Check if the database is ready after timeout
+
+  # --- Check if the database is ready after timeout ---
   mysqladmin ping --silent >/dev/null 2>&1 \
     || { log_error "MariaDB not ready after timeout"; exit 1; }
 
-  # Create database and user, and set root password
+  # --- Create database and user, and set root password ---
   log_ok "Creating database/user..."
   mysql -u root <<SQL
 CREATE DATABASE IF NOT EXISTS \`${MYSQL_DATABASE}\`;
@@ -71,12 +72,11 @@ ALTER USER 'root'@'localhost' IDENTIFIED BY '${MYSQL_ROOT_PASSWORD}';
 FLUSH PRIVILEGES;
 SQL
 
-  # Temporarily shutdown the database to apply changes
-  mysqladmin -u root -p"${MYSQL_ROOT_PASSWORD}" shutdown >/dev/null 2>&1 \
-    || mysqladmin -u root shutdown >/dev/null 2>&1 \
-    || true
+  # --- Temporarily shutdown the database to apply changes ---
+  mysqladmin -u root -p"${MYSQL_ROOT_PASSWORD}" shutdown
 
-  wait "$pid" || true
+  # --- Wait for the database to shutdown ---
+  wait "$pid"
 else
   log_warn "Database '$MYSQL_DATABASE' already present. Skipping creation..."
 fi

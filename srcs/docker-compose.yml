@@ -43,7 +43,7 @@ services:
     env_file:
       - .env
     secrets:
-      - db_root_password
+      - db_password
       - wp_credentials
     restart: on-failure
 
