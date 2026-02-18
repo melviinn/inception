@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -e    # Exit immediately if a command exits with a non-zero status
 
 # --- Colors / logging ---
 NC='\033[0m'
@@ -38,16 +38,14 @@ fi
 mkdir -p /run/mysqld "$DATADIR"
 chown -R mysql:mysql /run/mysqld "$DATADIR"
 
-# --- Check if the database already exists ---
+# --- Init SQL (DB/user) if the database does not already exist ---
 is_db_created=0
 if [ ! -d "$DATADIR/$MYSQL_DATABASE" ]; then
   is_db_created=1
 fi
 
-# --- Init SQL (DB/user) if the database does not already exist ---
 if [ "$is_db_created" -eq 1 ]; then
-  log_info "Starting MariaDB temporarily for init SQL..."
-  mariadbd --skip-networking &
+  mariadbd --silent-startup --skip-networking >/dev/null 2>&1 &
   pid="$!"
 
   # --- Wait for the database to be ready (timeout: 60s) ---
@@ -73,13 +71,13 @@ FLUSH PRIVILEGES;
 SQL
 
   # --- Temporarily shutdown the database to apply changes ---
-  mysqladmin -u root -p"${MYSQL_ROOT_PASSWORD}" shutdown
+  mysqladmin -u root -p"${MYSQL_ROOT_PASSWORD}" -s shutdown >/dev/null 2>&1
 
-  # --- Wait for the database to shutdown ---
+  # --- Wait for the database process to exit ---
   wait "$pid"
 else
   log_warn "Database '$MYSQL_DATABASE' already present. Skipping creation..."
 fi
 
 # --- Start MariaDB in foreground ---
-exec mariadbd
+exec mariadbd --silent-startup

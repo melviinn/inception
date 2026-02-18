@@ -16,12 +16,8 @@ build:
 all: build
 
 down:
-	@if [ -z "$(DOCKER_CTRS)" ]; then \
-		echo "\n$(RED)No containers to stop and remove$(RESET_COLOR)"; \
-	else \
-		echo "\n$(RED)Stopping and removing all Docker containers...$(RESET_COLOR)"; \
-		cd $(WORKDIR)/srcs && docker compose down; \
-	fi
+	@echo "$(RED)Stopping compose stack...$(RESET_COLOR)"
+	@cd $(WORKDIR)/srcs && docker compose down --remove-orphans || true
 
 infos:
 	@echo "$(BLUE)Docker Images:$(RESET_COLOR)"
@@ -34,39 +30,50 @@ infos:
 	@docker system df
 
 logs:
-	@echo "\n$(BLUE)Showing logs for all containers...$(RESET_COLOR)"
+	@echo "$(BLUE)Showing logs for all containers...$(RESET_COLOR)"
 	@cd $(WORKDIR)/srcs && docker compose logs
 
 clean-containers:
-	@if [ -z "$(DOCKER_CTRS)" ]; then \
+	@CTRS="$$(docker ps -aq)"; \
+	if [ -z "$$CTRS" ]; then \
 		echo "\n$(RED)No containers to remove$(RESET_COLOR)"; \
 	else \
 		echo "\n$(RED)Removing Docker containers...$(RESET_COLOR)"; \
-		docker rm -f $(DOCKER_CTRS); \
+		docker rm -f $$CTRS; \
 	fi
 
 clean-imgs:
-	@if [ -z "$(DOCKER_IMGS)" ]; then \
+	@IMGS="$$(docker images -q)"; \
+	if [ -z "$$IMGS" ]; then \
 		echo "\n$(RED)No images to remove$(RESET_COLOR)"; \
 	else \
-		docker rmi --force $(DOCKER_IMGS); \
+		echo "\n$(RED)Removing Docker images...$(RESET_COLOR)"; \
+		docker rmi -f $$IMGS; \
 	fi
 
 clean-volumes:
-	@if [ -z "$(DOCKER_VLMS)" ]; then \
+	@VLMS="$$(docker volume ls -q)"; \
+	if [ -z "$$VLMS" ]; then \
 		echo "\n$(RED)No volumes to remove$(RESET_COLOR)"; \
 	else \
 		echo "\n$(RED)Removing Docker volumes...$(RESET_COLOR)"; \
-		docker volume rm $(DOCKER_VLMS); \
+		docker volume rm $$VLMS; \
 	fi
 
+clean-cache:
+	@echo "$(RED)Removing Docker build cache...$(RESET_COLOR)"
+	@docker builder prune -af || true
+	@docker buildx prune -af || true
+
 clean: down clean-imgs
-	@echo "\n$(RED)All Docker containers & images has been removed!$(RESET_COLOR)"
+	@echo "$(RED)All Docker containers and images removed!$(RESET_COLOR)"
 
-fclean: down clean-imgs clean-volumes
-	@echo "\n$(RED)All Docker containers, images and volumes has been removed!$(RESET_COLOR)"
+fclean: clean clean-volumes
+	@echo "$(RED)Full Docker cleanup done!$(RESET_COLOR)"
 
+full-clean: fclean clean-cache
+	@echo "$(RED)Complete Docker cleanup done!$(RESET_COLOR)"
 
-re:	fclean build
+re: fclean build
 
-.PHONY: build down clean-containers clean-imgs clean-volumes fclean re
+.PHONY: build all down infos logs clean-containers clean-imgs clean-volumes clean-cache clean fclean re
