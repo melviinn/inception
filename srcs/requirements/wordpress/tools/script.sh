@@ -5,6 +5,11 @@ WP_PATH='/var/www/html'
 DB_HOST='mariadb'
 DB_PORT='3306'
 
+GREEN='\033[0;32m'
+NC='\033[0m'
+
+log_ok()    { printf "%b\n" "${GREEN}[OK] $*${NC}"; }
+
 # --- Check required environment variables ---
 : "${DOMAIN_NAME:?Missing DOMAIN_NAME}"
 : "${MYSQL_DATABASE:?Missing MYSQL_DATABASE}"
@@ -91,5 +96,7 @@ if ! wp --allow-root --path="${WP_PATH}" --url="https://${DOMAIN_NAME}" core is-
       --role=author
   fi
 fi
+
+log_ok "Wordpress installation is completed!"
 
 exec php-fpm8.2 -F

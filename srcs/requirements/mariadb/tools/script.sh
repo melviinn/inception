@@ -8,10 +8,10 @@ GREEN='\033[0;32m'
 YELLOW='\033[0;33m'
 BLUE='\033[0;34m'
 
-log_info()  { printf "%b\n" "${BLUE}[INFO]${NC} $*"; }
-log_ok()    { printf "%b\n" "${GREEN}[OK]${NC} $*"; }
-log_warn()  { printf "%b\n" "${YELLOW}[WARN]${NC} $*"; }
-log_error() { printf "%b\n" "${RED}[ERROR]${NC} $*" >&2; }
+log_info()  { printf "%b\n" "${BLUE}[INFO] $*${NC}"; }
+log_ok()    { printf "%b\n" "${GREEN}[OK] $*${NC}"; }
+log_warn()  { printf "%b\n" "${YELLOW}[WARN] $*${NC}"; }
+log_error() { printf "%b\n" "${RED}[ERROR] $*${NC}" >&2; }
 
 DATADIR="/var/lib/mysql"
 
@@ -78,6 +78,8 @@ SQL
 else
   log_warn "Database '$MYSQL_DATABASE' already present. Skipping creation..."
 fi
+
+log_ok "Mariadb initilisation completed!"
 
 # --- Start MariaDB in foreground ---
 exec mariadbd --silent-startup
