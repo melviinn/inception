@@ -114,7 +114,7 @@ WordPress admin panel:
 https://<your_login>.42.fr/wp-admin
 ```
 
-![WordPress login](screens/wp-login-panel.png)
+![WordPress login](imgs/wp-login-panel.png)
 
 ---
 
@@ -130,10 +130,10 @@ https://<your_login>.42.fr/wp-admin
 ### What can be managed from WordPress admin
 
 - Users and roles
-  ![WordPress user panel](screens/wp-admin-panel-users.png)
+  ![WordPress user panel](imgs/wp-admin-panel-users.png)
 
 - Passwords
-  ![WordPress password management](screens/wp-admin-password.png)
+  ![WordPress password management](imgs/wp-admin-password.png)
 
 - Website title and general settings
-  ![WordPress website settings](screens/wp-admin-website-settings.png)
+  ![WordPress website settings](imgs/wp-admin-website-settings.png)
