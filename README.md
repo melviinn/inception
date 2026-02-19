@@ -1,5 +1,17 @@
 _This project has been created as part of the 42 curriculum by mduchauf._
 
+# Table of contents
+
+- [Description](#description)
+- [Instructions](#instructions)
+  - [Prerequisites](#prerequisites)
+  - [Initial commands](#before-running-make-required)
+  - [Build & Start the project](#build-and-start-the-project)
+- [Resources](#resources)
+  - [Links](#links)
+  - [AI utilisation](#ai-utilisation)
+- [Project description](#project-description)
+
 # <ins>Description</ins>
 
 The **Inception** project is a **system administration** exercise whose main goal is to introduce the fundamentals of **containerization** using **Docker**.
@@ -104,17 +116,32 @@ sudo systemctl restart docker
 
 ### 4) Give acces to make and docker commands without sudo (optional but recommended)
 
+Create the group docker (if not already existing)
+
+```bash
+sudo groupadd docker
+```
+
+Add your user to the docker group
+
 ```bash
 sudo usermod -aG docker $USER
-newgrp docker
+```
+
+You then need to restart the virtual machine
+
+```bash
+reboot
 ```
 
 Alternatively, you can run the make commands in su mode:
 
 ```bash
 su
-...make
+...
 ```
+
+> [Wordpress Post installation](https://make.wordpress.org/cli/handbook/guides/installing/)
 
 ---
 

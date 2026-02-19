@@ -28,10 +28,18 @@ infos:
 	@docker volume ls
 	@echo "\n$(BLUE)Docker System Disk Usage:$(RESET_COLOR)"
 	@docker system df
+	@echo "\n$(BLUE)Volumes mountpoints...$(RESET_COLOR)"
+	@docker volume inspect -f '"Mountpoint": "{{ .Mountpoint }}"' mariadb_data ;\
+	docker volume inspect -f '"Mountpoint": "{{ .Mountpoint }}"' wordpress_data
 
 logs:
 	@echo "$(BLUE)Showing logs for all containers...$(RESET_COLOR)"
 	@cd $(WORKDIR)/srcs && docker compose logs
+
+inspect-vlm:
+	@echo "$(BLUE)Volumes mountpoints...$(RESET_COLOR)"
+	@docker volume inspect -f '"Mountpoint": "{{ .Mountpoint }}"' mariadb_data ;\
+		docker volume inspect -f '"Mountpoint": "{{ .Mountpoint }}"' wordpress_data
 
 clean-containers:
 	@CTRS="$$(docker ps -aq)"; \

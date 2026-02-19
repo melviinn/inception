@@ -1,9 +1,11 @@
-This file must describe how a developer can:
-◦ Set up the environment from scratch (prerequisites, configuration files, se-
-crets).
-◦ Build and launch the project using the Makefile and Docker Compose.
-◦ Use relevant commands to manage the containers and volumes.
-◦ Identify where the project data is stored and how it persists.
+# Table of contents
+
+- [Prerequisites](#prerequisites)
+  - [Required installation](#installation-of-docker-docker-compose-make-and-configuration-of-permissions)
+  - [Config files & secrets](#setup-configuration-files-and-secrets)
+  - [Docker named volumes](#data-persistence-for-volumes)
+- [Makefile commands](#makefile-commands)
+- [Commands utils](#commands-utils)
 
 # Developer Documentation
 
@@ -19,7 +21,6 @@ crets).
 1. Install Docker & Docker Compose
 
 ```bash
-# For Ubuntu
 sudo apt-get update
 sudo apt-get install -y docker.io docker-compose
 ```
@@ -27,15 +28,14 @@ sudo apt-get install -y docker.io docker-compose
 2. Install Make
 
 ```bash
-# For Ubuntu
 sudo apt-get install -y build-essential
 ```
 
 3. Add your user to the Docker group to run Docker commands without sudo (optional but recommended)
 
 ```bash
-sudo usermod -aG docker $USER		# Add the current user to the docker group
-newgrp docker						# Apply the new group membership without logging out and back in
+sudo groupadd docker
+sudo usermod -aG docker $USER
 ```
 
 4. To access your website via `https://<login>.42.fr`, you must map the domain to your local machine.
@@ -92,12 +92,9 @@ DOMAIN_NAME=
 # MYSQL Configuration
 MYSQL_DATABASE=
 MYSQL_USER=
-MYSQL_PASSWORD_FILE=/run/secrets/...
-MYSQL_ROOT_PASSWORD_FILE=/run/secrets/...
 
 # Wordpress Configuration
 WP_TITLE=
-WP_CREDENTIALS_FILE=/run/secrets/...
 ```
 
 You also need to add the actual secrets (e.g., database passwords, WordPress credentials) to the respective files in the `secrets/` directory. Make sure to keep these secrets secure and do not commit them to version control.
@@ -107,7 +104,12 @@ wp_credentials file should contain the following format:
 ```txt
 # Example wp_credentials file
 WP_ADMIN_USER=
+WP_ADMIN_EMAIL=
 WP_ADMIN_PASSWORD=
+
+WP_USER=
+WP_USER_EMAIL=
+WP_USER_PASSWORD=
 ```
 
 Other secrets fils should only contain the respective password for root or normal user, for example:
@@ -137,6 +139,7 @@ volumes:
 To specifically store the data on your local machine `(/home/login/data)`, you have to configure the file `/etc/docker/daemon.json` and create the data directory with the correct permissions.
 
 Create the data directory for the `named volumes` and set the correct permissions:
+
 ```bash
 sudo mkdir -p /home/<login>/data/docker
 sudo chown -R $USER:$USER /home/<login>/data/docker
@@ -145,6 +148,7 @@ sudo chown -R $USER:$USER /home/<login>/data/docker
 Replace `<login>` with your 42 login.
 
 Configure Docker to use the correct data directory for volumes:
+
 ```bash
 sudo nano /etc/docker/daemon.json
 ```
@@ -163,7 +167,7 @@ You then need to restart the Docker daemon for the changes to take effect:
 sudo systemctl restart docker
 ```
 
-This configuration ensures that all Docker data, including volumes, is stored in the specified directory on your local machine. The MariaDB and WordPress data will be persisted in the `mariadb_data` and `wordpress_data` volumes, respectively, which are located within the `/home/<login>/data` directory. (This ensure the data are in the right directory and that we don't use bind mounts, which are not allowed in this project)
+This configuration ensures that all Docker data, including volumes, is stored in the specified directory on your local machine. The MariaDB and WordPress data will be persisted in the `mariadb_data` and `wordpress_data` volumes, which are located within the `/home/<login>/data` directory. (This ensure the data are in the right directory and that we don't use bind mounts, which are not allowed in this project)
 
 ## Makefile commands
 
@@ -176,7 +180,7 @@ make
 #### Stop and remove all containers created by `docker-compose up` without removing volumes or images
 
 ```bash
-make down 						# ==> this will launch docker compose down
+make down
 ```
 
 #### Removes all docker containers, networks, volumes, and images created by `docker-compose up`
@@ -185,24 +189,37 @@ make down 						# ==> this will launch docker compose down
 make fclean
 ```
 
+#### Removes all docker's data and cache
+
+```bash
+make full-clean
+```
+
 #### Removes all containers, networks, volumes, and images created by `docker-compose up` and restart the project
 
 ```bash
 make re
 ```
 
-#### Display information about the current state of Docker images, containers, and volumes
+#### Display information about the current state of Docker images, containers, volumes, docker system usage and volumes mountpoints
 
 ```bash
 make infos
 ```
 
-#### You also have cleanup commands to remove only containers, volumes, or images:
+#### Display logs for all the active containers
+
+```bash
+make logs
+```
+
+#### You also have cleanup commands to remove only containers, volumes, images or cache:
 
 ```bash
 make clean-containers
 make clean-volumes
 make clean-imgs
+make clean-cache
 ```
 
 <br>
@@ -236,8 +253,32 @@ docker logs <CONTAINER_NAME_OR_ID>
 docker logs wordpress
 ```
 
+#### View logs for all running container
+
+```bash
+docker compose logs
+```
+
 #### Remove a specific docker image
 
 ```bash
 docker rmi <IMAGE_ID>
+```
+
+#### Inspect a specific volume
+
+```bash
+docker volume inspect <volume_name>
+```
+
+#### View the docker disk usage
+
+```bash
+docker system df
+```
+
+#### Display system informations about docker
+
+```bash
+docker system info
 ```
