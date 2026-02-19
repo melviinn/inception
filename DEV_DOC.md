@@ -213,6 +213,12 @@ make infos
 make logs
 ```
 
+#### Display volumes mountpoints
+
+```bash
+make inspect-vlm
+```
+
 #### You also have cleanup commands to remove only containers, volumes, images or cache:
 
 ```bash

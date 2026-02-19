@@ -279,9 +279,3 @@ Volumes are not a good choice if you need to access the files from the host, as 
 In our case we will use Docker Volumes cause we don't need to access the files from the host.
 
 => [https://docs.docker.com/engine/storage/volumes/](https://docs.docker.com/engine/storage/volumes/)
-
----
-
-```
-
-```

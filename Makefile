@@ -20,26 +20,32 @@ down:
 	@cd $(WORKDIR)/srcs && docker compose down --remove-orphans || true
 
 infos:
-	@echo "$(BLUE)Docker Images:$(RESET_COLOR)"
+	@echo "$(GREEN)Docker Images:$(RESET_COLOR)"
 	@docker images
-	@echo "\n$(BLUE)Docker Containers:$(RESET_COLOR)"
+	@echo "\n$(GREEN)Docker Containers:$(RESET_COLOR)"
 	@docker ps -a
-	@echo "\n$(BLUE)Docker Volumes:$(RESET_COLOR)"
+	@echo "\n$(GREEN)Docker Volumes:$(RESET_COLOR)"
 	@docker volume ls
-	@echo "\n$(BLUE)Docker System Disk Usage:$(RESET_COLOR)"
+	@echo "\n$(GREEN)Docker System Disk Usage:$(RESET_COLOR)"
 	@docker system df
-	@echo "\n$(BLUE)Volumes mountpoints...$(RESET_COLOR)"
-	@docker volume inspect -f '"Mountpoint": "{{ .Mountpoint }}"' mariadb_data ;\
-	docker volume inspect -f '"Mountpoint": "{{ .Mountpoint }}"' wordpress_data
+	@VLMS="$$(docker volume ls -q)"; \
+	if [ ! -z "$$VLMS" ]; then \
+		echo "\n$(GREEN)Volumes mountpoints...$(RESET_COLOR)"; \
+		docker volume inspect -f '"Mountpoint": "{{ .Mountpoint }}"' $$VLMS; \
+	fi
 
 logs:
-	@echo "$(BLUE)Showing logs for all containers...$(RESET_COLOR)"
+	@echo "$(GREEN)Showing logs for all containers...$(RESET_COLOR)"
 	@cd $(WORKDIR)/srcs && docker compose logs
 
 inspect-vlm:
-	@echo "$(BLUE)Volumes mountpoints...$(RESET_COLOR)"
-	@docker volume inspect -f '"Mountpoint": "{{ .Mountpoint }}"' mariadb_data ;\
-		docker volume inspect -f '"Mountpoint": "{{ .Mountpoint }}"' wordpress_data
+	@VLMS="$$(docker volume ls -q)"; \
+	if [ -z "$$VLMS" ]; then \
+		echo "$(RED)No volumes to show...$(RESET_COLOR)"; \
+	else \
+		echo "$(GREEN)Volumes mountpoints...$(RESET_COLOR)"; \
+		docker volume inspect -f '"Mountpoint": "{{ .Mountpoint }}"' $$VLMS; \
+	fi
 
 clean-containers:
 	@CTRS="$$(docker ps -aq)"; \
