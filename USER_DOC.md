@@ -130,26 +130,7 @@ https://<your_login>.42.fr/wp-admin
 
 ### What can be managed from WordPress admin
 
-<div style="display:flex; gap:16px; flex-wrap:wrap; align-items:flex-start;">
-
-  <figure style="margin:0; display:flex; flex-direction:column; align-items:start;">
-    <figcaption>Users and roles</figcaption>
-    <img src="imgs/wp-admin-panel-users.png" alt="WP User Panel" width="300">
-  </figure>
-
-  <figure style="margin:0; display:flex; flex-direction:column; align-items:start;">
-    <figcaption>Passwords</figcaption>
-    <img src="imgs/wp-admin-password.png" alt="WP Password Panel" width="300">
-  </figure>
-
-  <figure style="margin:0; display:flex; flex-direction:column; align-items:start;">
-    <figcaption>Website title and general settings</figcaption>
-    <img src="imgs/wp-admin-website-settings.png" alt="WP Settings Panel" width="300">
-  </figure>
-
-</div>
-
-<!-- - Users and roles
+- Users and roles
 
 <img src="imgs/wp-admin-panel-users.png" alt="WP User Panel" width="400">
 
@@ -159,4 +140,4 @@ https://<your_login>.42.fr/wp-admin
 
 - Website title and general settings
 
-<img src="imgs/wp-admin-website-settings.png" alt="WP Settings Panel" width="400"> -->
+<img src="imgs/wp-admin-website-settings.png" alt="WP Settings Panel" width="400">
