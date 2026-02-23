@@ -1,5 +1,4 @@
-*.env
+srcs/.env
 secrets/
 .vscode/
-
 imgs/
