@@ -114,7 +114,9 @@ WordPress admin panel:
 https://<your_login>.42.fr/wp-admin
 ```
 
-![WordPress login](imgs/wp-login-panel.png)
+<img src="imgs/wp-login-panel.png" alt="WP Login Panel" width="400">
+
+<!-- ![WordPress login](imgs/wp-login-panel.png) -->
 
 ---
 
@@ -124,16 +126,18 @@ https://<your_login>.42.fr/wp-admin
 
 - Secrets are stored in local files under:
   - `secrets/`
-
-> Do not commit real passwords or sensitive values into Git.
+- Wordpress title and domain name are stored in `./srcs/.env`
 
 ### What can be managed from WordPress admin
 
 - Users and roles
-  ![WordPress user panel](imgs/wp-admin-panel-users.png)
+
+<img src="imgs/wp-admin-panel-users.png" alt="WP User Panel" width="400">
 
 - Passwords
-  ![WordPress password management](imgs/wp-admin-password.png)
+
+<img src="imgs/wp-admin-password.png" alt="WP Password Panel" width="400">
 
 - Website title and general settings
-  ![WordPress website settings](imgs/wp-admin-website-settings.png)
+
+<img src="imgs/wp-admin-website-settings.png" alt="WP Settings Panel" width="400">
