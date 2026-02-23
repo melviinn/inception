@@ -61,7 +61,8 @@ if [ "$is_db_created" -eq 1 ]; then
     || { log_error "MariaDB not ready after timeout"; exit 1; }
 
   # --- Create database and user, and set root password ---
-  log_ok "Creating database/user..."
+  log_info "Creating database/user..."
+
   mysql -u root <<SQL
 CREATE DATABASE IF NOT EXISTS \`${MYSQL_DATABASE}\`;
 CREATE USER IF NOT EXISTS '${MYSQL_USER}'@'localhost' IDENTIFIED BY '${MYSQL_PASSWORD}';
@@ -79,7 +80,7 @@ else
   log_warn "Database '$MYSQL_DATABASE' already present. Skipping creation..."
 fi
 
-log_ok "Mariadb initilisation completed!"
+log_ok "User successfully created & Mariadb initilisation completed!"
 
 # --- Start MariaDB in foreground ---
 exec mariadbd --silent-startup

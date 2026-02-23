@@ -6,9 +6,10 @@ NC='\033[0m'
 
 log_ok()    { printf "%b\n" "${GREEN}[OK] $*"${NC};}
 
-# --- Check if the environments var are specified (return if one is missing) ---
+# --- Check if the environments var are specified ---
 : "${DOMAIN_NAME:?missing DOMAIN_NAME environment variable}"
 
+# --- Generate SSL certificate & key
 mkdir -p /etc/nginx/ssl
 openssl req -x509 -nodes -days 365 -newkey rsa:4096 \
 	-keyout /etc/nginx/ssl/nginx.key \
@@ -18,6 +19,6 @@ openssl req -x509 -nodes -days 365 -newkey rsa:4096 \
 
 cp -r ./conf/nginx.conf /etc/nginx/nginx.conf
 
-log_ok "Successfully generated openssl certification & key"
+log_ok "Successfully generated SSL certificate & key"
 
 exec nginx -g "daemon off;"

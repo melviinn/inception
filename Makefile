@@ -35,7 +35,7 @@ infos:
 	fi
 
 logs:
-	@echo "$(GREEN)Showing logs for all containers...$(RESET_COLOR)"
+	@echo "$(GREEN)Showing logs for all containers...\n$(RESET_COLOR)"
 	@cd $(WORKDIR)/srcs && docker compose logs
 
 inspect-vlm:
