@@ -1,0 +1,7 @@
+*
+!conf/
+!conf/nginx.conf
+!tools/
+!tools/script.sh
+!Dockerfile
+!.dockerignore

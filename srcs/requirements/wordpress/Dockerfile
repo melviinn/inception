@@ -6,7 +6,8 @@ RUN apt update -y && apt-get install -y wget\
 	tar\
 	php-fpm\
 	php-mysql\
-	mariadb-client
+	mariadb-client\
+	&& rm -rf /var/lib/apt/lists/*
 
 # Install WordPress files into /var/www/html
 RUN mkdir -p /var/www/html

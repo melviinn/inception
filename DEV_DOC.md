@@ -169,6 +169,8 @@ sudo systemctl restart docker
 
 This configuration ensures that all Docker data, including volumes, is stored in the specified directory on your local machine. The MariaDB and WordPress data will be persisted in the `mariadb_data` and `wordpress_data` volumes, which are located within the `/home/<login>/data` directory. (This ensure the data are in the right directory and that we don't use bind mounts, which are not allowed in this project)
 
+> [Wordpress daemon](https://docs.docker.com/engine/daemon/)
+
 ## Makefile commands
 
 #### Build the docker images and start the project

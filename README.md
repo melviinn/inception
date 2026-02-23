@@ -114,6 +114,8 @@ You then need to restart the Docker daemon for the changes to take effect:
 sudo systemctl restart docker
 ```
 
+> [Wordpress daemon](https://docs.docker.com/engine/daemon/)
+
 ### 4) Give acces to make and docker commands without sudo (optional but recommended)
 
 Create the group docker (if not already existing)
