@@ -114,7 +114,7 @@ WordPress admin panel:
 https://<login>.42.fr/wp-admin
 ```
 
-<img src="imgs/wp-login-panel.png" alt="WP Login Panel" width="400">
+<img src=".imgs/wp-login-panel.png" alt="WP Login Panel" width="400">
 
 ---
 
@@ -139,12 +139,12 @@ echo "my_new_db_password" > secrets/db_password.txt
 
 - Users and roles
 
-<img src="imgs/wp-admin-panel-users.png" alt="WP User Panel" width="400">
+<img src=".imgs/wp-admin-panel-users.png" alt="WP User Panel" width="400">
 
 - Passwords
 
-<img src="imgs/wp-admin-password.png" alt="WP Password Panel" width="400">
+<img src=".imgs/wp-admin-password.png" alt="WP Password Panel" width="400">
 
 - Website title and general settings
 
-<img src="imgs/wp-admin-website-settings.png" alt="WP Settings Panel" width="400">
+<img src=".imgs/wp-admin-website-settings.png" alt="WP Settings Panel" width="400">
