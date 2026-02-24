@@ -2,7 +2,7 @@ FROM debian:bookworm
 
 # Install MariaDB
 RUN apt update -y && apt-get install -y mariadb-server \
-&& rm -rf /var/lib/apt/lists/*
+	&& rm -rf /var/lib/apt/lists/*
 
 # Create the config file for MariaDB and copy it to the container
 COPY ./conf/50-server.cnf /etc/mysql/mariadb.conf.d/50-server.cnf
