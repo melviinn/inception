@@ -116,8 +116,6 @@ https://<your_login>.42.fr/wp-admin
 
 <img src="imgs/wp-login-panel.png" alt="WP Login Panel" width="400">
 
-<!-- ![WordPress login](imgs/wp-login-panel.png) -->
-
 ---
 
 ## Manage credentials and settings

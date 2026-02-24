@@ -41,113 +41,19 @@ This project aims to provide a solid understanding of Docker concepts while high
 
 # <ins>Instructions</ins>
 
-## Prerequisites
+For full environment setup (prerequisites, host configuration, secrets, Docker permissions), see **[DEV_DOC.md](./DEV_DOC.md)**.
 
-Make sure your system meets the following requirements before starting the project:
+For runtime usage (services, access URLs, admin panel, checks), see **[USER_DOC.md](./USER_DOC.md)**.
 
-- **Operating System:** Linux-based VM
-- **Docker:** Installed and working
-- **Docker Compose:** Installed and working
-- **Make:** Installed for using the provided Makefile
-- **Sudo privileges:** Required for managing Docker containers and networks
+## Quick start
 
----
+1. Configure your domain in `/etc/hosts` so `<login>.42.fr` resolves locally.
+2. Ensure Docker can store named volumes in `/home/<login>/data` (as required by the subject).
+3. Fill `srcs/.env` and `secrets/` with your local values.
 
-## Before running `make` (required)
+> Detailed steps are documented in **DEV_DOC.md**.
 
-### 1) Configure your domain name (hosts file)
-
-To access your website via `https://<login>.42.fr`, you must map the domain to your local machine.
-
-Edit `/etc/hosts` and add the following line (replace `<login>` with your 42 login):
-
-```bash
-127.0.0.1 <login>.42.fr
-```
-
-Example (for `mduchauf`):
-
-```bash
-127.0.0.1 mduchauf.42.fr
-```
-
-You can edit the file with:
-
-```bash
-sudo nano /etc/hosts
-```
-
-Or append the line directly:
-
-```bash
-echo "127.0.0.1 <login>.42.fr" | sudo tee -a /etc/hosts
-```
-
-### 2) Create the data directory for the `named volumes` and set the correct permissions
-
-```bash
-sudo mkdir -p /home/<login>/data/docker
-sudo chown -R $USER:$USER /home/<login>/data/docker
-```
-
-Replace `<login>` with your 42 login.
-
-### 3) Configure Docker to use the correct data directory for volumes
-
-To ensure that Docker uses the correct data directory for volumes, you need to configure the Docker daemon to use a specific directory on your local machine. This is done by creating or modifying the `/etc/docker/daemon.json` file.
-
-```bash
-sudo nano /etc/docker/daemon.json
-```
-
-Add the following content to specify the data directory (replace `<login>` with your 42 login):
-
-```json
-{
-  "data-root": "/home/<login>/data/docker"
-}
-```
-
-You then need to restart the Docker daemon for the changes to take effect:
-
-```bash
-sudo systemctl restart docker
-```
-
-> [Wordpress daemon](https://docs.docker.com/engine/daemon/)
-
-### 4) Give acces to make and docker commands without sudo (optional but recommended)
-
-Create the group docker (if not already existing)
-
-```bash
-sudo groupadd docker
-```
-
-Add your user to the docker group
-
-```bash
-sudo usermod -aG docker $USER
-```
-
-You then need to restart the virtual machine
-
-```bash
-reboot
-```
-
-Alternatively, you can run the make commands in su mode:
-
-```bash
-su
-...
-```
-
-> [Wordpress Post installation](https://make.wordpress.org/cli/handbook/guides/installing/)
-
----
-
-## Build and Start the Project
+## Build & Start the project
 
 To build all Docker images and start the containers:
 
@@ -208,8 +114,9 @@ This will give you access to the WordPress website hosted on your NGINX containe
 
 ## AI Utilisation
 
-- I used AI to install the required docker packages (docker.io & docker-compose)
-- It also helped me to redact the README.md file and find the best explanations for the different subjects (VM vs Docker, Secrets vs Env vars, etc.)
+- I used `AI` to help me find the right version of debian (just to be sure), and to find the right packages to install
+- It also helped me to redact the `README` files and find the best explanations/structure for them
+- It also give me some `utils function` in the `script` files (ex: checker for environment variables, cut credentials from secrets file and delete `\r\n` etc...)
 
 <br>
 <br>

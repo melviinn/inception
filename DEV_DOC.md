@@ -38,31 +38,33 @@ sudo groupadd docker
 sudo usermod -aG docker $USER
 ```
 
-4. To access your website via `https://<login>.42.fr`, you must map the domain to your local machine.
+> [Docker post installation](https://docs.docker.com/engine/install/linux-postinstall/)
 
-Edit `/etc/hosts` and add the following line (replace `<login>` with your 42 login):
+4. To access your website via `https://mduchauf.42.fr`, you must configure `/etc/hosts`.
 
-```bash
-127.0.0.1 <login>.42.fr
-```
-
-Example (for `mduchauf`):
+The first lines of `/etc/hosts` should be:
 
 ```bash
-127.0.0.1 mduchauf.42.fr
+127.0.0.1	localhost mduchauf.42.fr
+127.0.1.1	inception
 ```
 
-You can edit the file with:
+> The second line is important for `sudo` hostname resolution.
+> Without it, you may get errors like: `sudo: unable to resolve host inception`.
+
+You can edit the file manually:
 
 ```bash
 sudo nano /etc/hosts
 ```
 
-Or append the line directly:
+Or replace the first two lines automatically (while keeping the rest of the file unchanged):
 
 ```bash
-echo "127.0.0.1 <login>.42.fr" | sudo tee -a /etc/hosts
+{ printf "127.0.0.1\tlocalhost <login>.42.fr\n127.0.1.1\tinception\n"; tail -n +3 /etc/hosts; } | sudo tee /etc/hosts > /dev/null
 ```
+
+Replace `<login>` with your 42 login.
 
 <br>
 <br>
@@ -169,7 +171,7 @@ sudo systemctl restart docker
 
 This configuration ensures that all Docker data, including volumes, is stored in the specified directory on your local machine. The MariaDB and WordPress data will be persisted in the `mariadb_data` and `wordpress_data` volumes, which are located within the `/home/<login>/data` directory. (This ensure the data are in the right directory and that we don't use bind mounts, which are not allowed in this project)
 
-> [Wordpress daemon](https://docs.docker.com/engine/daemon/)
+> [Docker daemon](https://docs.docker.com/engine/daemon/)
 
 ## Makefile commands
 
