@@ -4,8 +4,7 @@ _This project has been created as part of the 42 curriculum by mduchauf._
 
 - [Description](#description)
 - [Instructions](#instructions)
-  - [Prerequisites](#prerequisites)
-  - [Initial commands](#before-running-make-required)
+  - [Quick start](#quick-start)
   - [Build & Start the project](#build-and-start-the-project)
 - [Resources](#resources)
   - [Links](#links)
