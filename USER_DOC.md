@@ -22,7 +22,7 @@ This stack is composed of **3 containers**, each with a specific role:
    - Accepts HTTPS requests and handles TLS termination.
    - Proxies PHP requests to the WordPress/PHP-FPM container.
    - **Exposed port:** `443` (host -> container).
-   - **Important:** in mandatory mode, this is the **only exposed port**.
+   - **Important:** This is the **only exposed port**.
 
 2. **WordPress + PHP-FPM (without Nginx)**
    - Runs WordPress application files.
@@ -31,7 +31,7 @@ This stack is composed of **3 containers**, each with a specific role:
    - **Internal port:** `9000` (not exposed to host).
 
 3. **MariaDB (without Nginx)**
-   - Stores persistent WordPress data (users, posts, settings, etc.).
+   - Stores persistent WordPress data (users, posts, settings, etc...).
    - Accessible only from WordPress through the Docker network.
    - **Internal port:** `3306` (not exposed to host).
 
@@ -71,7 +71,7 @@ make
 Then open:
 
 ```text
-https://<your_login>.42.fr
+https://<login>.42.fr
 ```
 
 Stop containers without deleting images/volumes:
@@ -105,13 +105,13 @@ make re
 WordPress login page:
 
 ```text
-https://<your_login>.42.fr/wp-login.php
+https://<login>.42.fr/wp-login.php
 ```
 
 WordPress admin panel:
 
 ```text
-https://<your_login>.42.fr/wp-admin
+https://<login>.42.fr/wp-admin
 ```
 
 <img src="imgs/wp-login-panel.png" alt="WP Login Panel" width="400">
@@ -125,6 +125,15 @@ https://<your_login>.42.fr/wp-admin
 - Secrets are stored in local files under:
   - `secrets/`
 - Wordpress title and domain name are stored in `./srcs/.env`
+
+If you want to change any of these values, edit the corresponding file and restart the project with `make re` to apply changes.
+
+Example:
+
+```bash
+# Edit the database password
+echo "my_new_db_password" > secrets/db_password.txt
+```
 
 ### What can be managed from WordPress admin
 

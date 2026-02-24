@@ -12,7 +12,7 @@
 ## Prerequisites
 
 1. Ensure that your user has the necessary permissions to run sudo commands.
-2. Docker, Docker Compose and Make must be installed on your system.
+<!-- 2. Docker, Docker Compose and Make must be installed on your system. -->
 
 <br>
 
@@ -40,12 +40,12 @@ sudo usermod -aG docker $USER
 
 > [Docker post installation](https://docs.docker.com/engine/install/linux-postinstall/)
 
-4. To access your website via `https://mduchauf.42.fr`, you must configure `/etc/hosts`.
+4. To access your website via `https://<login>.42.fr`, you must configure `/etc/hosts`.
 
 The first lines of `/etc/hosts` should be:
 
 ```bash
-127.0.0.1	localhost mduchauf.42.fr
+127.0.0.1	localhost <login>.42.fr
 127.0.1.1	inception
 ```
 
@@ -65,6 +65,8 @@ Or replace the first two lines automatically (while keeping the rest of the file
 ```
 
 Replace `<login>` with your 42 login.
+
+> Instead of hardcoding the domain in `/etc/hosts` with 'inception' or 'login' you can use variables like `$USER` or `$(hostname)` to make it more dynamic, but for simplicity and clarity, we will use hardcoded values in this project.
 
 <br>
 <br>
@@ -99,9 +101,9 @@ MYSQL_USER=
 WP_TITLE=
 ```
 
-You also need to add the actual secrets (e.g., database passwords, WordPress credentials) to the respective files in the `secrets/` directory. Make sure to keep these secrets secure and do not commit them to version control.
+You also need to add the actual `secrets` (e.g., database passwords, WordPress credentials) to the respective files in the `secrets/` directory. Make sure to keep these secrets secure and `do not commit them` to version control.
 
-wp_credentials file should contain the following format:
+`wp_credentials` file should contain the following format:
 
 ```txt
 # Example wp_credentials file
@@ -114,11 +116,16 @@ WP_USER_EMAIL=
 WP_USER_PASSWORD=
 ```
 
-Other secrets fils should only contain the respective password for root or normal user, for example:
+Other secrets fils should only contain the respective password for `root` or normal `user`, for example:
 
 ```txt
 # Example db_password file
 my_secure_db_password
+```
+
+```txt
+# Example db_root_password file
+my_secure_db_root_password
 ```
 
 <br>
@@ -126,19 +133,19 @@ my_secure_db_password
 
 ### Data persistence for volumes
 
-The project uses Docker named volumes to persist data for the MariaDB database and WordPress. The volumes are defined in the `docker-compose.yml` file as follows:
+The project uses `Docker named volumes` to persist data for the `MariaDB database` and `WordPress`. The volumes are defined in the `docker-compose.yml` file as follows:
 
 ```yaml
 volumes:
   mariadb:
-	name: mariadb_data
-	driver: local
+    name: mariadb_data
+    driver: local
   wordpress:
-	name: wordpress_data
-	driver: local
+    name: wordpress_data
+    driver: local
 ```
 
-To specifically store the data on your local machine `(/home/login/data)`, you have to configure the file `/etc/docker/daemon.json` and create the data directory with the correct permissions.
+To specifically store the data on your local machine `(/home/<login>/data)`, you have to configure the file `/etc/docker/daemon.json` and create the data directory with the correct permissions.
 
 Create the data directory for the `named volumes` and set the correct permissions:
 
@@ -169,7 +176,7 @@ You then need to restart the Docker daemon for the changes to take effect:
 sudo systemctl restart docker
 ```
 
-This configuration ensures that all Docker data, including volumes, is stored in the specified directory on your local machine. The MariaDB and WordPress data will be persisted in the `mariadb_data` and `wordpress_data` volumes, which are located within the `/home/<login>/data` directory. (This ensure the data are in the right directory and that we don't use bind mounts, which are not allowed in this project)
+This configuration ensures that all Docker data, including volumes, are stored in the specified directory on your local machine. The MariaDB and WordPress data will be persisted in the `mariadb_data` and `wordpress_data` volumes, which are located within the `/home/<login>/data` directory. (This ensure the data are in the right directory and that we don't use bind mounts, which are not allowed in this project)
 
 > [Docker daemon](https://docs.docker.com/engine/daemon/)
 
@@ -187,43 +194,43 @@ make
 make down
 ```
 
-#### Removes all docker containers, networks, volumes, and images created by `docker-compose up`
+#### Removes all `containers, networks, volumes, and images` created by `docker-compose up`
 
 ```bash
 make fclean
 ```
 
-#### Removes all docker's data and cache
+#### Removes all docker's `data` and `cache`
 
 ```bash
 make full-clean
 ```
 
-#### Removes all containers, networks, volumes, and images created by `docker-compose up` and restart the project
+#### Removes all `containers, networks, volumes, and images` created by `docker-compose up` and `restart` the project
 
 ```bash
 make re
 ```
 
-#### Display information about the current state of Docker images, containers, volumes, docker system usage and volumes mountpoints
+#### Display `informations` about the current state of Docker `images, containers, volumes, docker system usage and volumes mountpoints`
 
 ```bash
 make infos
 ```
 
-#### Display logs for all the active containers
+#### Display `logs` for all the `active containers`
 
 ```bash
 make logs
 ```
 
-#### Display volumes mountpoints
+#### Display `volumes mountpoints`
 
 ```bash
 make inspect-vlm
 ```
 
-#### You also have cleanup commands to remove only containers, volumes, images or cache:
+#### You also have `cleanup` commands to remove only `containers, volumes, images or cache`:
 
 ```bash
 make clean-containers
@@ -237,25 +244,25 @@ make clean-cache
 
 ## Commands utils
 
-#### List all dockers containers
+#### List all `dockers containers`
 
 ```bash
 docker ps -a
 ```
 
-#### List all dockers images
+#### List all `dockers images`
 
 ```bash
 docker images
 ```
 
-#### List all dockers volumes
+#### List all `dockers volumes`
 
 ```bash
 docker volume ls
 ```
 
-#### View logs of a specific container
+#### View `logs` of a `specific container`
 
 ```bash
 docker logs <CONTAINER_NAME_OR_ID>
@@ -263,31 +270,31 @@ docker logs <CONTAINER_NAME_OR_ID>
 docker logs wordpress
 ```
 
-#### View logs for all running container
+#### View `logs` for all `running container`
 
 ```bash
 docker compose logs
 ```
 
-#### Remove a specific docker image
+#### `Remove` a specific `docker image`
 
 ```bash
 docker rmi <IMAGE_ID>
 ```
 
-#### Inspect a specific volume
+#### Inspect a `specific volume`
 
 ```bash
 docker volume inspect <volume_name>
 ```
 
-#### View the docker disk usage
+#### View the docker `disk usage`
 
 ```bash
 docker system df
 ```
 
-#### Display system informations about docker
+#### Display `system informations` about docker
 
 ```bash
 docker system info
