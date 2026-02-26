@@ -11,7 +11,4 @@ RUN chmod +x /script.sh
 WORKDIR /app
 COPY . /app
 
-# Expose port 443
-EXPOSE 443
-
 CMD [ "/script.sh"]

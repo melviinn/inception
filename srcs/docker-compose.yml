@@ -1,7 +1,7 @@
 services:
   nginx:
     build: ./requirements/nginx
-    image: nginx
+    image: nginx:1.0
     container_name: nginx
     volumes:
       - wordpress:/var/www/html
@@ -16,12 +16,12 @@ services:
     restart: on-failure
   mariadb:
     build: ./requirements/mariadb
-    image: mariadb
+    image: mariadb:1.0
     container_name: mariadb
     volumes:
       - mariadb:/var/lib/mysql
-    ports:
-      - 3306:3306
+    expose:
+      - "3306"
     networks:
       - inception
     env_file:
@@ -35,12 +35,12 @@ services:
     restart: on-failure
   wordpress:
     build: ./requirements/wordpress
-    image: wordpress
+    image: wordpress:1.0
     container_name: wordpress
     volumes:
       - wordpress:/var/www/html
-    ports:
-      - 9000:9000
+    expose:
+      - "9000"
     networks:
       - inception
     depends_on:
