@@ -7,7 +7,7 @@ RUN apt update -y && apt-get install -y nginx openssl \
 COPY ./tools/script.sh /
 RUN chmod +x /script.sh
 
-# Copy the files of the application
+# Copy the files of the application for the script to access the files it needs
 WORKDIR /app
 COPY . /app
 

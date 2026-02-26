@@ -15,6 +15,7 @@ log_ok()    { printf "%b\n" "${GREEN}[OK] $*${NC}"; }
 : "${MYSQL_DATABASE:?Missing MYSQL_DATABASE}"
 : "${MYSQL_USER:?Missing MYSQL_USER}"
 : "${WP_CREDENTIALS_FILE:?Missing WP_CREDENTIALS_FILE}"
+: "${MYSQL_PASSWORD_FILE:?Missing MYSQL_PASSWORD_FILE}"
 
 # --- Get MYSQL_PASSWORD from secret file ---
 if [ "${MYSQL_PASSWORD_FILE:-}" ] && [ -f "${MYSQL_PASSWORD_FILE}" ]; then
@@ -22,11 +23,6 @@ if [ "${MYSQL_PASSWORD_FILE:-}" ] && [ -f "${MYSQL_PASSWORD_FILE}" ]; then
 else
   : "${MYSQL_PASSWORD:?Missing MYSQL_PASSWORD or MYSQL_PASSWORD_FILE}"
 fi
-
-# --- Wait until MariaDB is ready ---
-until mariadb-admin ping -h"${DB_HOST}" -P"${DB_PORT}" -u"${MYSQL_USER}" -p"${MYSQL_PASSWORD}" --silent; do
-  sleep 1
-done
 
 # --- Get WP admin credentials from secret file ---
 if [ -z "${WP_ADMIN_USER:-}" ] && [ -f "${WP_CREDENTIALS_FILE}" ]; then
@@ -62,6 +58,13 @@ if [ -z "${WP_USER_PASSWORD:-}" ] && [ -f "${WP_CREDENTIALS_FILE}" ]; then
   WP_USER_PASSWORD="$(grep -m1 '^WP_USER_PASSWORD=' "${WP_CREDENTIALS_FILE}" | cut -d= -f2- | tr -d '\r\n')"
 fi
 : "${WP_USER_PASSWORD:?Missing WP_USER_PASSWORD}"
+
+
+
+# --- Wait until MariaDB is ready ---
+until mariadb-admin ping -h"${DB_HOST}" -P"${DB_PORT}" -u"${MYSQL_USER}" -p"${MYSQL_PASSWORD}" --silent; do
+  sleep 1
+done
 
 # --- Create wp-config.php if it doesn't exist ---
 if [ ! -f "${WP_PATH}/wp-config.php" ]; then
